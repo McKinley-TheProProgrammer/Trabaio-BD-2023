@@ -3,111 +3,65 @@
     
 <head>
 
-<title> Titulo da Página</title>
-<title>Teacher and Course Rating Website</title>
-	<style>
-		* {
-			margin: 0;
-			padding: 0;
-			box-sizing: border-box;
-		}
+<meta charset="UTF-8">
 
-		body {
-			font-family: Arial, Helvetica, sans-serif;
-		}
+<style>
 
-		h1, h2, h3 {
-			margin-bottom: 20px;
-		}
+	.teacher{
+		color:blue;
+	}
+	.button{
+		background-color: rgb(220, 20, 97);
+		box-sizing: border-box;
+	}
+	.title{
+		text-align: center;
+		background-color: blue;
+	}
 
-		.container {
-			max-width: 1200px;
-			margin: 0 auto;
-			padding: 20px;
-		}
+</style>
 
-		.teacher {
-			border: 1px solid #ccc;
-			padding: 20px;
-			margin-bottom: 20px;
-		}
+<img src = "data/2023.1/imgs/unblogo.png" width="96" height="48">
+<title>Avaliador de Professores e Cursos UnB</title>
 
-		.teacher h2 {
-			margin-bottom: 10px;
-		}
-
-		.rating {
-			font-size: 24px;
-			color: orange;
-			margin-right: 5px;
-		}
-
-		.course {
-			border: 1px solid #ccc;
-			padding: 20px;
-			margin-bottom: 20px;
-		}
-
-		.course h2 {
-			margin-bottom: 10px;
-		}
-
-		.reviews {
-			margin-bottom: 20px;
-		}
-
-		.review {
-			border: 1px solid #ccc;
-			padding: 10px;
-			margin-bottom: 10px;
-		}
-
-		.review h3 {
-			margin-bottom: 5px;
-		}
-
-		.review span {
-			font-style: italic;
-		}
-
-		form {
-			margin-bottom: 20px;
-		}
-
-		form label {
-			display: block;
-			margin-bottom: 5px;
-			font-weight: bold;
-		}
-
-		form input[type="text"], form textarea {
-			width: 100%;
-			padding: 10px;
-			margin-bottom: 10px;
-			border: 1px solid #ccc;
-			border-radius: 5px;
-		}
-
-		form select {
-			width: 100%;
-			padding: 10px;
-			margin-bottom: 10px;
-			border: 1px solid #ccc;
-			border-radius: 5px;
-		}
-
-		form input[type="submit"] {
-			background-color: #4CAF50;
-			color: white;
-			padding: 10px
-        }
-    </style>
 </head>
 
 <body>
 
-<div id="teacher"><h1>Textando coisas aqui psl psls psl psl</h1></div>
+	<?php
+
+		$sql = "SELECT * FROM users;";
+		$result = mysqli_query($conn,$sql);
+	
+	?>
+<div class="teacher"
+><h1 style="align-content: center;">Avaliador de Professores e Cursos UnB</h1>
+</div>
+
+<form>
+	<div class="form-group">
+	  <label for="name">Nome</label>
+	  <input type="name" class="form-control" id="nameInput1" aria-describedby="emailHelp">
+	</div>
+	<div class="form-group">
+		<label for="email">Email</label>
+		<input type="email" class="form-control" id="exampleInputPassword1">
+	  </div>
+	<div class="form-group">
+	  <label for="exampleInputPassword1">Senha</label>
+	  <input type="password" class="form-control" id="exampleInputPassword1">
+	</div>
+	<div class="form-group form-check">
+	  <input type="checkbox" class="form-check-input" id="exampleCheck1">
+	  <label class="form-check-label" for="exampleCheck1">Check me out</label>
+	</div>
+	<button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+
+
 <table> toma uma banca de Dadinhos </table>
+
+
 </body>
 
 </html>
