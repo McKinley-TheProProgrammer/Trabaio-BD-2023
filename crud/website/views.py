@@ -6,6 +6,7 @@ import json
 
 views = Blueprint('views',__name__)
 
+# CREATE VIEW home ()
 @views.route('/', methods=['GET','POST'])
 def home():
     if request.method == 'POST':
@@ -13,7 +14,7 @@ def home():
         if(len(note) < 1):
             flash('Avaliação muito pequena!!', category='error')
         else:
-            new_note = Note(mat=current_user.mat,nome=current_user.nome,data=note,user_id=current_user.id) #Schema
+            new_note = Note(data=note,user_id=current_user.id) #Schema
             db.session.add(new_note)
             db.session.commit()
             flash('Avaliação Enviada', category='success')
