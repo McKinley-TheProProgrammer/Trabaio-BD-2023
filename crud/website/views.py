@@ -13,11 +13,11 @@ def home():
         if(len(note) < 1):
             flash('Avaliação muito pequena!!', category='error')
         else:
-            new_note = Note(data=note,user_id=current_user.id)
+            new_note = Note(data=note,user_id=current_user.id,mat=current_user.mat,nome=current_user.nome) #Schema
             db.session.add(new_note)
             db.session.commit()
             flash('Avaliação Enviada', category='success')
-            
+
     return render_template("home.html",user=current_user)
 
 @views.route('/delete-note',methods=['POST'])

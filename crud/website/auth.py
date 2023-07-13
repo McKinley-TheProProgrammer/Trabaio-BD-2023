@@ -12,9 +12,10 @@ def login():
         email = request.form.get('email')
         password = request.form.get('password')
 
-        print(email)
+        print([email,password])
         user = User.query.filter_by(email=email).first() # SELECT
         if(user):
+            print(user.password)
             if(check_password_hash(user.password,password)):
                 flash('Logado',category='success')
                 login_user(user, remember=True)
@@ -45,6 +46,7 @@ def sign_up():
             password2 = request.form.get('password2')
 
             user = User.query.filter_by(email=email).first()
+           
             if user:
                 flash('Email já existe.', category='error')
             elif len(email) < 4:
@@ -58,8 +60,8 @@ def sign_up():
             elif len(password1) < 7:
                 flash('A senha precisa ter no minimo 8 caracteres', category='error')
             else:
-                new_user = User(mat=mat,email=email,nome=nome,curso=curso, password=generate_password_hash(
-                    password1, method='sha256'))
+                new_user = User(mat=mat,email=email,nome=nome,curso=curso, password=generate_password_hash(password1,method='sha256')) 
+                
                 db.session.add(new_user)
                 db.session.commit()
                

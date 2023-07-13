@@ -1,6 +1,5 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-import os
 from os import path
 from flask_login import LoginManager
 
@@ -14,9 +13,6 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
 
     db.init_app(app)
-
-    
-    
     from .views import views
     from .auth import auth
 
