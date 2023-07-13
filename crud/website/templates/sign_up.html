@@ -1,4 +1,37 @@
 {% extends "base.html" %} {% block title %} Sign Up {% endblock %}
 {% block conteudo %}
-<h1> Esta e a pagina do Sign Up</h1>
+<form method="POST">
+    <h3 align = "center"> Registrar </h3>
+    <!-- Formulários para Preencher os dados do Perfil-->
+    <div class="form-group">
+        <!-- Campo para colocar o numero de Matricula -->
+        <label for="mat">Matrícula</label>
+        <input type="mat" class = "form-control" id="mat" name = "mat" placeholder="Numero de Matricula">
+    </div>
+    <div class="form-group">
+        <!-- Campo para colocar o Nome -->
+        <label for="nome">Nome do Estudante</label>
+        <input type="text" class = "form-control" id="nome" name = "nome" placeholder="Nome e Sobrenome">
+    </div>
+    <div class="form-group">
+        <label for="email">Endereço de Email</label>
+        <input type="email" class = "form-control" id="email" name="email" placeholder="Email aqui">
+    </div>
+    <div class="form-group">
+        <label for="curso">Curso</label>
+        <input type="curso" class = "form-control" id="curso" name="curso" placeholder="Nome do Curso">
+    </div>
+    <div class="form-group">
+        <!-- Campo para colocar a senha -->
+        <label for="password1">Senha</label>
+        <input type="password" class = "form-control" id="password1" name = "password1" placeholder="Coloque a Senha">
+    </div>
+    <div class="form-group">
+        <!-- Campo para confirmar a senha -->
+        <label for="password2">Confirmar Senha</label>
+        <input type="password" class = "form-control" id="password2" name = "password2" placeholder="Confirmar senha">
+    </div>
+    <br>
+    <button type="submit" class="btn btn-outline-primary"> Registrar </button>
+</form>
 {% endblock %}
