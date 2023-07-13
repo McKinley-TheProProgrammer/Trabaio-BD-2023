@@ -5,9 +5,9 @@ from os import path
 from flask_login import LoginManager
 
 db = SQLAlchemy()
-DB_NAME = "database.db"
+DB_NAME = "bancadadedadinhos.db"
 
-
+#Criação do Aplicativo
 def create_app():
     app = Flask(__name__)
     app.config['SECRET_KEY'] = 'KEY_SECRETO'
@@ -15,6 +15,8 @@ def create_app():
 
     db.init_app(app)
 
+    
+    
     from .views import views
     from .auth import auth
 
@@ -24,6 +26,7 @@ def create_app():
     from .models import User, Note
 
     with app.app_context():
+        print("Criando as Tabelas do BD")
         db.create_all()
         
     login_manager = LoginManager()
@@ -33,5 +36,6 @@ def create_app():
     @login_manager.user_loader
     def load_user(id):
         return User.query.get(int(id))
+    
     return app
 
