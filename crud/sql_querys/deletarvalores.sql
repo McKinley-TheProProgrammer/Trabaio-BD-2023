@@ -1,1 +1,1 @@
-DELETE FROM usuario WHERE (senha="senha");
+DROP TABLE Usuario,Turma,Disciplina,Nota,Departamento;

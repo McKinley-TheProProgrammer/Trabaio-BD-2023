@@ -5,16 +5,14 @@ from flask_login import LoginManager
 import os
 import psycopg2
 
-from .sqlRawExecute import executeScriptsFromFile
+from .sqlRawExecute import executeScriptsFromFile, dropAllTables
 
 from dotenv import load_dotenv
-
-
-
+import csv
 
 db = SQLAlchemy()
 
-DB_NAME = "database.db"
+#DB_NAME = "database.db"
 
 #Criação do Aplicativo
 def create_app():
@@ -25,9 +23,9 @@ def create_app():
 
     
     app.config['SECRET_KEY'] = 'KEY_SECRETO'
-    app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
+    #app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{url}'
 
-    db.init_app(app)
+    #db.init_app(app)
 
     from .views import views
     from .auth import auth
@@ -41,7 +39,10 @@ def create_app():
     #name = data["name"]
     with connection:
         with connection.cursor() as cursor:
+            dropAllTables(cursor)
             executeScriptsFromFile("sql_querys/criacaotabelassql.sql",cursor)
+            cursor.close()
+            connection.commit()
     #with app.app_context():
     #    print("Criando as Tabelas do BD")
     #    db.create_all()

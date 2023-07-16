@@ -1,10 +1,23 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 from .models import User
 from werkzeug.security import generate_password_hash, check_password_hash
-from . import db   ##means from __init__.py import db
+import os, psycopg2, csv
+
 from flask_login import login_user, login_required, logout_user, current_user
+from .sqlRawExecute import executeScriptsFromFile
+
+INSERT_USER_RETURNING_MAT = "INSERT INTO Usuario(matricula,nome,email,senha,curso) VALUES (%s,%s,%s,%s,%s) RETURNING matricula"
+
+INSERT_AVAILABLE_DISCIPLINES = "INSERT INTO Disciplina(cod_disciplina,nome,codigo_depto) VALUES (%s) RETURNING id"
+
+INSERT_NOTAS_RETURNING = "INSERT INTO Nota(usuario_id,nota_disciplina,matricula,nome,descricao,dataDePostagem) VALUES (%s)"
 
 auth = Blueprint('auth',__name__)
+
+def get_db_connection():
+    url = os.getenv("DATABASE_URL")
+    conn = psycopg2.connect(url)
+    return conn
 
 @auth.route("/login",methods=['GET','POST'])
 def login():
@@ -45,11 +58,16 @@ def sign_up():
             password1 = request.form.get('password1')
             password2 = request.form.get('password2')
 
-            user = User.query.filter_by(email=email).first()
-           
-            if user:
-                flash('Email já existe.', category='error')
-            elif len(email) < 4:
+            conn = get_db_connection()
+            cursor = conn.cursor()
+            
+
+            #user = User.query.filter_by(email=email).first()
+            
+
+            #if user_id:
+            #    flash('Usuário já existe.', category='error')
+            if len(email) < 4:
                 flash('Email precisa ter no minimo 4 caracteres.', category='error')
             elif len(nome) < 2:
                 flash('Nome precisa ter no minimo 2 caracteres', category='error')
@@ -60,12 +78,16 @@ def sign_up():
             elif len(password1) < 7:
                 flash('A senha precisa ter no minimo 8 caracteres', category='error')
             else:
-                new_user = User(mat=mat,email=email,nome=nome,curso=curso, password=generate_password_hash(password1,method='sha256')) 
+                #new_user = User(mat=mat,email=email,nome=nome,curso=curso, password=generate_password_hash(password1,method='sha256')) 
+                cursor.execute(INSERT_USER_RETURNING_MAT,(mat,nome,email,password1,curso))
+                user_id = cursor.fetchone()[0]
+                conn.commit()
+                cursor.close()
                 
-                db.session.add(new_user)
-                db.session.commit()
-               
-                login_user(new_user, remember=True)
+                #db.session.add(new_user)
+                #db.session.commit()
+                
+                #login_user(True, remember=True)
                 flash('Conta Registrada!', category='success')
                 return redirect(url_for('views.home'))
             

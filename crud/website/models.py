@@ -6,13 +6,15 @@ from sqlalchemy.sql import func
 # TABLES do Banco de Dados
 
 # CREATE TABLE notas (....)
-class Note(db.Model):
-    id = sa.Column(sa.Integer,primary_key=True)
-    data = sa.Column(sa.String(10000)) # 20000 caracteres
-    date = sa.Column(sa.DateTime(timezone=True),default=func.now())
-    mat = sa.Column(sa.Integer,primary_key=True,unique=True)
-    nome = sa.Column(sa.String(150))
-    user_id = sa.Column(sa.Integer,sa.ForeignKey("user.id")) # INT FOREIGN KEY REFERENCES User(user.id)
+class Note():
+
+    def __init__(self,id,mat,nome,desc,date,user_id):
+        self.id = id
+        self.data = desc
+        self.date = date
+        self.mat = mat
+        self.nome = nome
+        self.user_id = user_id # INT FOREIGN KEY REFERENCES User(user.id)
 
 # CREATE TABLE user (....)
 class User(db.Model, UserMixin):
