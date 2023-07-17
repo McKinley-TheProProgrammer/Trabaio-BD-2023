@@ -19,38 +19,47 @@ def get_db_connection():
     conn = psycopg2.connect(url)
     return conn
 
+connect = get_db_connection()
+#cursor = connect.cursor()
+
 @auth.route("/login",methods=['GET','POST'])
 def login():
+    global loggedIn
     if(request.method == 'POST'):
         email = request.form.get('email')
         password = request.form.get('password')
 
         print([email,password])
-        #user = User.query.filter_by(email=email).first() # SELECT
-
-        if(user):
-            print(user.password)
-            if(check_password_hash(user.password,password)):
-                flash('Logado',category='success')
-                login_user(user, remember=True)
-                return redirect(url_for('views.home'))
+        with connect.cursor() as cursor:
+            cursor.execute(LOGIN_USER,(email,password))
+            user = cursor.fetchone()
+            print(user)
+            if(user):
+                #print(user.password)
+                if(user[4] == password):
+                    flash('Logado',category='success')
+                    #login_user(user, remember=True)
+                    loggedIn = True
+                    return redirect(url_for('views.home'))
+                else:
+                    flash('Senha incorreta, tente novamente', category='error')
             else:
-                flash('Senha incorreta, tente novamente', category='error')
-        else:
-            flash('Email não existe', category='error')
+                flash('Email não existe', category='error')
 
-    return render_template("login.html",user=current_user)
+    return render_template("login.html")
 
 @auth.route('/logout')
 @login_required
 def logout():
+    loggedIn = False
     logout_user()
     return redirect(url_for('auth.login'))
 
 
 @auth.route('/sign-up', methods=['GET','POST'])
 def sign_up():
-
+    global loggedIn
+    global user_id
     if request.method == 'POST':
             mat = request.form.get('mat')
             email = request.form.get('email')
@@ -62,7 +71,9 @@ def sign_up():
             conn = get_db_connection()
             cursor = conn.cursor()
             
-
+            cursor.execute(SELECT_USERS)
+            user = cursor.fetchone()
+            #current_user = user
             #if user:
             #   flash('Usuário já existe.', category='error')
             if len(email) < 4:
@@ -78,10 +89,11 @@ def sign_up():
             else:
                 cursor.execute(INSERT_USER_RETURNING_MAT,(mat,nome,email,password1,curso))
                 cursor.execute(LOGIN_USER,(email,password1))
-                user_id = cursor.fetchone()[0]
+                user = cursor.fetchone()
                 conn.commit()
-                cursor.close()
                 
+                cursor.close()
+                conn.close()
                 #db.session.add(new_user)
                 #db.session.commit()
                 

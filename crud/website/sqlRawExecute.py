@@ -14,7 +14,7 @@ def executeScriptsFromFile(sqlFile,cursor):
         try:
             cursor.execute(command)
         except psycopg2.Error as msg:
-            print("Comando Skipado",msg)
+            print(f"Comando de {command} Skipado",msg)
 
     return True
 
@@ -23,10 +23,15 @@ def dropAllTables(conn):
 
 
 # STRINGS COM QUERYS DO SQL PURO
-INSERT_USER_RETURNING_MAT = "INSERT INTO Usuario(matricula,nome,email,senha,curso) VALUES (%s,%s,%s,%s,%s) RETURNING id;"
+INSERT_USER_RETURNING_MAT = "IF NOT EXISTS (SELECT * FROM Usuario WHERE matricula = %s AND email = %s) BEGIN INSERT INTO Usuario(matricula,nome,email,senha,curso) VALUES (%s,%s,%s,%s,%s) RETURNING id;"
 
 INSERT_AVAILABLE_DISCIPLINES = "INSERT INTO Disciplina(cod_disciplina,nome,codigo_depto) VALUES (%s,%s,%s) RETURNING id;"
 
 INSERT_NOTAS_RETURNING = "INSERT INTO Nota(nota_disciplina,descricao) VALUES (%s,%s) RETURNING id;"
 
 LOGIN_USER = "SELECT * FROM Usuario WHERE email = %s AND senha = %s LIMIT 1;"
+
+SELECT_USERS = "SELECT * FROM Usuario;"
+SELECT_USER_FROM_ID = "SELECT id FROM Usuario;"
+
+SELECT_NOTES = "SELECT * FROM Nota;"

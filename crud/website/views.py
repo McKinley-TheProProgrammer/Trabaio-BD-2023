@@ -4,30 +4,37 @@ from .models import Note, User
 from datetime import date, datetime
 import os, psycopg2, csv
 from .auth import get_db_connection 
+from .sqlRawExecute import *
 import json
 
 views = Blueprint('views',__name__)
 
-connect = get_db_connection()
-cursor = connect.cursor()
 # CREATE VIEW home ()
 @views.route('/', methods=['GET','POST'])
 def home():
     if request.method == 'POST':
-        note = request.form.get('note')
+        descricao = request.form.get('note')
         nota = request.form.get('aval')
-        if(len(note) < 1):
+        if(len(descricao) < 1):
             flash('Avaliação muito pequena!!', category='error')
+        elif(len(nota) < 1):
+            flash('De uma Nota',category='error')
         else:
-            
+            connect = get_db_connection()
             #cursor.execute("SELECT * FROM Usuario")
             #note_list = cursor.fetchall()
             #print(len(note_list))
             #new_note = Note(note_list[0],new_note[1],new_note[2],note,nota,datetime.now()) #Schema
 
-            cursor.execute("INSERT INTO Nota(nota_disciplina,descricao) VALUES (%s,%s)", (nota,note))
-            connect.commit()
-            cursor.close()
+            with connect.cursor() as cursor:
+                cursor.execute(SELECT_USER_FROM_ID)
+                user = cursor.fetchone()[0]
+                print(user)
+                cursor.execute("INSERT INTO Nota(usuario_id,nota_disciplina,descricao,dataDePostagem) VALUES (%s,%s,%s,%s)", (user,int(nota),descricao,datetime.now()))
+                cursor.execute(SELECT_NOTES)
+                notes = cursor.fetchall()
+                connect.commit()
+                print(notes)
 
             #db.session.add(new_note)
             #db.session.commit()

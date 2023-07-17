@@ -19,7 +19,7 @@ deptos = 'data/2023.1/departamentos_2023-1.csv'
 disciplinas = 'data/2023.1/disciplinas_2023-1.csv'
 turmas = 'data/2023.1/turmas_2023-1.csv'
 
-deleteTablesOnStart = True
+deleteTablesOnStart = False
 
 #Criação do Aplicativo
 def create_app():
@@ -81,21 +81,21 @@ def create_app():
                         i += 1
 
                 with open(turmas, 'r',encoding='utf8') as csvfile:
-                    i = 0
-                    csvreader = csv.reader(csvfile)
-                    next(csvreader)
-                    for line in csvreader:
-                        if(i > 50):
-                            break
-                        try:
-                            cursor.execute("INSERT INTO Turma "
-                                        + "(turma,periodo,professor,horario,vagas_ocupadas,total_vagas,locall,cod_disciplina,cod_depto) " 
-                                        + "VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s);", 
-                                        (line[0],line[1],line[2],line[3],int(line[4]),int(line[5]),line[6],line[7],int(line[8])))
-                        except UnicodeDecodeError as erro:
-                            print(erro)
-                        i += 1
-            
+                        i = 0
+                        csvreader = csv.reader(csvfile)
+                        next(csvreader)
+                        for line in csvreader:
+                            if(i > 50):
+                                break
+                            try:
+                                cursor.execute("INSERT INTO Turma "
+                                            + "(turma,periodo,professor,horario,vagas_ocupadas,total_vagas,locall,cod_disciplina,cod_depto) " 
+                                            + "VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s);", 
+                                            (line[0],line[1],line[2],line[3],int(line[4]),int(line[5]),line[6],line[7],int(line[8])))
+                            except UnicodeDecodeError as erro:
+                                print(erro)
+                            i += 1
+                
     #with app.app_context():
     #    print("Criando as Tabelas do BD")
     #    db.create_all()
