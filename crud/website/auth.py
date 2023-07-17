@@ -4,7 +4,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import os, psycopg2, csv
 
 from flask_login import login_user, login_required, logout_user, current_user
-from .sqlRawExecute import executeScriptsFromFile
+from .sqlRawExecute import *
 
 INSERT_USER_RETURNING_MAT = "INSERT INTO Usuario(matricula,nome,email,senha,curso) VALUES (%s,%s,%s,%s,%s) RETURNING matricula"
 
@@ -26,7 +26,8 @@ def login():
         password = request.form.get('password')
 
         print([email,password])
-        user = User.query.filter_by(email=email).first() # SELECT
+        #user = User.query.filter_by(email=email).first() # SELECT
+
         if(user):
             print(user.password)
             if(check_password_hash(user.password,password)):
@@ -62,12 +63,9 @@ def sign_up():
             cursor = conn.cursor()
             
 
-            user = User.query.filter_by(email=email).first()
-            
-
-            if user:
-                flash('Usuário já existe.', category='error')
-            elif len(email) < 4:
+            #if user:
+            #   flash('Usuário já existe.', category='error')
+            if len(email) < 4:
                 flash('Email precisa ter no minimo 4 caracteres.', category='error')
             elif len(nome) < 2:
                 flash('Nome precisa ter no minimo 2 caracteres', category='error')
@@ -78,8 +76,8 @@ def sign_up():
             elif len(password1) < 7:
                 flash('A senha precisa ter no minimo 8 caracteres', category='error')
             else:
-                new_user = User(mat=mat,email=email,nome=nome,curso=curso, password=generate_password_hash(password1,method='sha256')) 
                 cursor.execute(INSERT_USER_RETURNING_MAT,(mat,nome,email,password1,curso))
+                cursor.execute(LOGIN_USER,(email,password1))
                 user_id = cursor.fetchone()[0]
                 conn.commit()
                 cursor.close()
@@ -87,7 +85,7 @@ def sign_up():
                 #db.session.add(new_user)
                 #db.session.commit()
                 
-                login_user(new_user, remember=True)
+                #login_user(new_user, remember=True)
                 flash('Conta Registrada!', category='success')
                 return redirect(url_for('views.home'))
             

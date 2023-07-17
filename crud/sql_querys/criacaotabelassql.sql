@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS Departamento(
 
 CREATE TABLE IF NOT EXISTS Disciplina(
 	id SERIAL,
-    cod_disciplina VARCHAR(30) NOT NULL,
+    cod_disciplina TEXT NOT NULL,
     nome VARCHAR(150) NOT NULL,
     codigo_depto INT NOT NULL,
     FOREIGN KEY (codigo_depto) REFERENCES Departamento(codigo_depto),
@@ -35,7 +35,8 @@ CREATE TABLE IF NOT EXISTS Turma(
     horario TEXT,
     vagas_ocupadas INT NOT NULL,
     total_vagas INT NOT NULL,
-    cod_disciplina VARCHAR(30) NOT NULL,
+    locall TEXT NOT NULL,
+    cod_disciplina TEXT NOT NULL,
     cod_depto INT NOT NULL,
     FOREIGN KEY (cod_disciplina) REFERENCES Disciplina(cod_disciplina),
 	FOREIGN KEY (cod_depto) REFERENCES Departamento(codigo_depto)

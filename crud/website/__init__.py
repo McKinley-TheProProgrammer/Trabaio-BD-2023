@@ -48,54 +48,53 @@ def create_app():
         with connection.cursor() as cursor:
             if(deleteTablesOnStart):
                 dropAllTables(cursor)
-            executeScriptsFromFile("sql_querys/criacaotabelassql.sql",cursor)
+                executeScriptsFromFile("sql_querys/criacaotabelassql.sql",cursor)
 
-            #Inserindo Departamentos
-            with open(deptos, 'r',encoding='utf8') as csvfile:
-                i = 0
-                csvreader = csv.reader(csvfile)
-                next(csvreader)
-                for line in csvreader:
-                    if(i > 50):
-                        break
-                    try:
-                        #print(line)
-                        cursor.execute("INSERT INTO Departamento (codigo_depto,nome) VALUES (%s,%s);", (int(line[0]),line[1]))
-                    except UnicodeDecodeError as erro:
-                        print(erro)
-                    i += 1
+                #Inserindo Departamentos
+                with open(deptos, 'r',encoding='utf8') as csvfile:
+                    i = 0
+                    csvreader = csv.reader(csvfile)
+                    next(csvreader)
+                    for line in csvreader:
+                        if(i > 50):
+                            break
+                        try:
+                            #print(line)
+                            cursor.execute("INSERT INTO Departamento (codigo_depto,nome) VALUES (%s,%s);", (int(line[0]),line[1]))
+                        except UnicodeDecodeError as erro:
+                            print(erro)
+                        i += 1
         
-            #Inserindo Disciplinas
-            with open(disciplinas, 'r',encoding='utf8') as csvfile:
-                i = 0
-                csvreader = csv.reader(csvfile)
-                next(csvreader)
-                for line in csvreader:
-                    if(i > 50):
-                        break
-                    try:
-                        #print(line)
-                        cursor.execute("INSERT INTO Disciplina (cod_disciplina,nome,codigo_depto) VALUES (%s,%s,%s);", (line[0],line[1],int(line[2])))
-                    except UnicodeDecodeError as erro:
-                        print(erro)
-                    i += 1
+                #Inserindo Disciplinas
+                with open(disciplinas, 'r',encoding='utf8') as csvfile:
+                    i = 0
+                    csvreader = csv.reader(csvfile)
+                    next(csvreader)
+                    for line in csvreader:
+                        if(i > 50):
+                            break
+                        try:
+                            #print(line)
+                            cursor.execute("INSERT INTO Disciplina (cod_disciplina,nome,codigo_depto) VALUES (%s,%s,%s);", (line[0],line[1],int(line[2])))
+                        except UnicodeDecodeError as erro:
+                            print(erro)
+                        i += 1
 
-            with open(turmas, 'r',encoding='utf8') as csvfile:
-                i = 0
-                csvreader = csv.reader(csvfile)
-                next(csvreader)
-                for line in csvreader:
-                    if(i > 50):
-                        break
-                    try:
-                        #print(line)
-                        cursor.execute("INSERT INTO Turma "
-                                       + "(turma,periodo,professor,horario,vagas_ocupadas,total_vagas,cod_disciplina,cod_depto) " 
-                                       + "VALUES (%s,%s,%s,%s,%s,%s,%s,%s);", 
-                                       (line[0],line[1],line[2],line[3],int(line[4]),int(line[5]),line[6],int(line[7])))
-                    except UnicodeDecodeError as erro:
-                        print(erro)
-                    i += 1
+                with open(turmas, 'r',encoding='utf8') as csvfile:
+                    i = 0
+                    csvreader = csv.reader(csvfile)
+                    next(csvreader)
+                    for line in csvreader:
+                        if(i > 50):
+                            break
+                        try:
+                            cursor.execute("INSERT INTO Turma "
+                                        + "(turma,periodo,professor,horario,vagas_ocupadas,total_vagas,locall,cod_disciplina,cod_depto) " 
+                                        + "VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s);", 
+                                        (line[0],line[1],line[2],line[3],int(line[4]),int(line[5]),line[6],line[7],int(line[8])))
+                        except UnicodeDecodeError as erro:
+                            print(erro)
+                        i += 1
             
     #with app.app_context():
     #    print("Criando as Tabelas do BD")
