@@ -3,8 +3,8 @@
 {% block conteudo %}
 <h1> Esta e a pagina inicial do Site</h1>
 <h2 align = "center"> Forum de Avaliações </h2>
-<ul class="list-group list-group-flush" id = "notes">
-    {% for n in notes %}
+<ul class="list-group list-group-flush" id = "note">
+    {% for n in note %}
     <li class="list-group-item">
         {{ n[2] }}
         <!--<button type="button" class="close" onClick="deleteNote({{note.id}})">

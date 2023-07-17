@@ -1,9 +1,9 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
-from .models import User
+
 from werkzeug.security import generate_password_hash, check_password_hash
 import os, psycopg2, csv
 
-from flask_login import login_user, login_required, logout_user, current_user
+from flask_login import login_user, login_required, logout_user
 from .sqlRawExecute import *
 
 INSERT_USER_RETURNING_MAT = "INSERT INTO Usuario(matricula,nome,email,senha,curso) VALUES (%s,%s,%s,%s,%s) RETURNING matricula"
@@ -48,12 +48,53 @@ def login():
 
     return render_template("login.html")
 
-@auth.route('/logout')
-@login_required
+@auth.route('/logout',methods=['GET'])
 def logout():
     loggedIn = False
     logout_user()
-    return redirect(url_for('auth.login'))
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    id = request.form.get('id')
+    print(id)
+    cursor.execute(DELETE_USER_BY_ID,(id,))
+
+    conn.commit()
+
+    cursor.close()
+    conn.close()
+
+    flash("Usuario Deslogado com sucesso", category="success")
+
+    return redirect(url_for('views.home'))
+
+@auth.route('/index-turmas', methods=['GET','POST'])
+def index_turmas():
+    
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute(SELECT_TURMAS)
+
+    turmas = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return render_template('index-turmas.html',classes=turmas)
+
+@auth.route('/index-disciplinas', methods=['GET','POST'])
+def index_disciplinas():
+    
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute(SELECT_DISCIPLINAS)
+
+    disciplinas = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return render_template('index-disciplinas.html',disciplines=disciplinas)
 
 
 @auth.route('/sign-up', methods=['GET','POST'])
@@ -73,10 +114,11 @@ def sign_up():
             
             cursor.execute(SELECT_USERS)
             user = cursor.fetchone()
+            conn.commit()
             #current_user = user
-            #if user:
-            #   flash('Usuário já existe.', category='error')
-            if len(email) < 4:
+            if user != None:
+                flash('Usuário já existe.', category='error')
+            elif len(email) < 4:
                 flash('Email precisa ter no minimo 4 caracteres.', category='error')
             elif len(nome) < 2:
                 flash('Nome precisa ter no minimo 2 caracteres', category='error')
@@ -101,4 +143,4 @@ def sign_up():
                 flash('Conta Registrada!', category='success')
                 return redirect(url_for('views.home'))
             
-    return render_template("sign_up.html",user=current_user)
+    return render_template("sign_up.html",us = user)
