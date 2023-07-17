@@ -24,3 +24,5 @@ INSERT_USER_RETURNING_MAT = "INSERT INTO Usuario(matricula,nome,email,senha,curs
 INSERT_AVAILABLE_DISCIPLINES = "INSERT INTO Disciplina(cod_disciplina,nome,codigo_depto) VALUES (%s,%s,%s) RETURNING id"
 
 INSERT_NOTAS_RETURNING = "INSERT INTO Nota(nota_disciplina,descricao) VALUES (%s,%s) RETURNING id"
+
+LOGIN = "SELECT * FROM Usuario WHERE email = %s AND password = %s LIMIT 1"

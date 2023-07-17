@@ -23,7 +23,6 @@ def home():
             #cursor.execute("SELECT * FROM Usuario")
             #note_list = cursor.fetchall()
             #print(len(note_list))
-
             #new_note = Note(note_list[0],new_note[1],new_note[2],note,nota,datetime.now()) #Schema
 
             cursor.execute("INSERT INTO Nota(nota_disciplina,descricao) VALUES (%s,%s)", (nota,note))
