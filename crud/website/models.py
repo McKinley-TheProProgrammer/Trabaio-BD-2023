@@ -8,13 +8,14 @@ from sqlalchemy.sql import func
 # CREATE TABLE notas (....)
 class Note():
 
-    def __init__(self,id,mat,nome,desc,date,user_id):
+    def __init__(self,id,mat,nome,desc,nota,date):
         self.id = id
         self.data = desc
+        self.nota = nota
         self.date = date
         self.mat = mat
         self.nome = nome
-        self.user_id = user_id # INT FOREIGN KEY REFERENCES User(user.id)
+        #self.user_id = user_id # INT FOREIGN KEY REFERENCES User(user.id)
 
 # CREATE TABLE user (....)
 class User(db.Model, UserMixin):

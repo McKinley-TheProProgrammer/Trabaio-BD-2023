@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS Usuario (
 
 CREATE TABLE IF NOT EXISTS Departamento(
 	id SERIAL,
-    codigo_depto VARCHAR(7) NOT NULL,
+    codigo_depto VARCHAR(30) NOT NULL,
     nome VARCHAR(150) NOT NULL,
     PRIMARY KEY(codigo_depto)
 );
@@ -19,9 +19,9 @@ CREATE TABLE IF NOT EXISTS Departamento(
 
 CREATE TABLE IF NOT EXISTS Disciplina(
 	id SERIAL,
-    cod_disciplina VARCHAR(7) NOT NULL,
+    cod_disciplina VARCHAR(30) NOT NULL,
     nome VARCHAR(150) NOT NULL,
-    codigo_depto VARCHAR(7),
+    codigo_depto VARCHAR(30),
     FOREIGN KEY (codigo_depto) REFERENCES Departamento(codigo_depto),
     PRIMARY KEY(cod_disciplina)
 );
@@ -29,8 +29,14 @@ CREATE TABLE IF NOT EXISTS Disciplina(
 
 CREATE TABLE IF NOT EXISTS Turma(
 	id SERIAL PRIMARY KEY,
-    cod_disciplina varchar(7) NOT NULL,
-    cod_depto varchar(7) NOT NULL,
+    turma INT NOT NULL,
+    periodo INT NOT NULL,
+    professor VARCHAR(100),
+    horario VARCHAR(28),
+    vagas_ocupadas INT NOT NULL,
+    total_vagas INT NOT NULL,
+    cod_disciplina varchar(30) NOT NULL,
+    cod_depto varchar(30) NOT NULL,
     FOREIGN KEY (cod_disciplina) REFERENCES Disciplina(cod_disciplina),
 	FOREIGN KEY (cod_depto) REFERENCES Departamento(codigo_depto)
 );

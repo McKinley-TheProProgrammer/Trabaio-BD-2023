@@ -14,6 +14,20 @@
     {% endfor %}
 </ul>
 <form method="POST">
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <label class="input-group-text" for="aval">Nota</label>
+        </div>
+        <select class="custom-select" id="aval" name="aval">
+          <option selected>Avalie a Disciplina</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+        </select>
+      </div>
+    <br>
     <textarea name="note" id="note" class="form-control"></textarea>
     <br>
         <div align="center">

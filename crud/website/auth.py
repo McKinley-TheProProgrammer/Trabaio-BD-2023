@@ -62,12 +62,12 @@ def sign_up():
             cursor = conn.cursor()
             
 
-            #user = User.query.filter_by(email=email).first()
+            user = User.query.filter_by(email=email).first()
             
 
-            #if user_id:
-            #    flash('Usuário já existe.', category='error')
-            if len(email) < 4:
+            if user:
+                flash('Usuário já existe.', category='error')
+            elif len(email) < 4:
                 flash('Email precisa ter no minimo 4 caracteres.', category='error')
             elif len(nome) < 2:
                 flash('Nome precisa ter no minimo 2 caracteres', category='error')
@@ -78,7 +78,7 @@ def sign_up():
             elif len(password1) < 7:
                 flash('A senha precisa ter no minimo 8 caracteres', category='error')
             else:
-                #new_user = User(mat=mat,email=email,nome=nome,curso=curso, password=generate_password_hash(password1,method='sha256')) 
+                new_user = User(mat=mat,email=email,nome=nome,curso=curso, password=generate_password_hash(password1,method='sha256')) 
                 cursor.execute(INSERT_USER_RETURNING_MAT,(mat,nome,email,password1,curso))
                 user_id = cursor.fetchone()[0]
                 conn.commit()
@@ -87,7 +87,7 @@ def sign_up():
                 #db.session.add(new_user)
                 #db.session.commit()
                 
-                #login_user(True, remember=True)
+                login_user(new_user, remember=True)
                 flash('Conta Registrada!', category='success')
                 return redirect(url_for('views.home'))
             
