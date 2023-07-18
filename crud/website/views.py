@@ -29,7 +29,7 @@ def home():
             cursor = connect.cursor()
 
            
-            cursor.execute("INSERT INTO Nota(nota_disciplina,descricao,dataDePostagem,usuario_id,turma_id) VALUES (%s,%s,%s,%s,%s)", (nota,descricao,datetime.now(),id,id))
+            cursor.execute("INSERT INTO Nota(nota_disciplina,descricao,dataDePostagem,usuario_id,turma_id) VALUES (%s,%s,%s,%s,%s)", (nota,descricao,datetime.now(),user,turma_id))
             cursor.execute(SELECT_NOTES)
             notes = cursor.fetchall()
 
@@ -62,9 +62,9 @@ def profile():
     conn = get_db_connection()
 
     cursor = conn.cursor()
-    id = request.form['id']
+    #id = request.form['id']
     cursor.execute(SELECT_USERS)
     user = cursor.fetchone()
     conn.commit()
 
-    return render_template("profile.html",us=user)
+    return render_template("profile.html",usuario=user)

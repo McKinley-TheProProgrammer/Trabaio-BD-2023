@@ -61,9 +61,10 @@ def logout():
         with conn.cursor(cursor_factory=RealDictCursor) as cursor:
             cursor = conn.cursor()
 
-            id = request.form.get('id')
-            print(id)
-            cursor.execute(DELETE_USER_BY_ID,(id,))
+            cursor.execute(SELECT_USERS)
+            user = cursor.fetchone()
+
+            cursor.execute(DELETE_USER_BY_ID,(user[0],))
 
             flash("Usuario Deslogado com sucesso", category="success")
 
@@ -116,9 +117,9 @@ def sign_up():
         user = cursor.fetchone()
         conn.commit()
         #current_user = user
-        if user != None:
-            flash('Usuário já existe.', category='error')
-        elif len(email) < 4:
+        #if user != None:
+        #    flash('Usuário já existe.', category='error')
+        if len(email) < 4:
             flash('Email precisa ter no minimo 4 caracteres.', category='error')
         elif len(nome) < 2:
             flash('Nome precisa ter no minimo 2 caracteres', category='error')
