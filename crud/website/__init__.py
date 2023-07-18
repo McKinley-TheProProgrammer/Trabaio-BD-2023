@@ -57,7 +57,7 @@ def create_app():
                     csvreader = csv.reader(csvfile)
                     next(csvreader)
                     for line in csvreader:
-                        if(i > 50):
+                        if(i > 100):
                             break
                         try:
                             #print(line)
@@ -72,7 +72,7 @@ def create_app():
                     csvreader = csv.reader(csvfile)
                     next(csvreader)
                     for line in csvreader:
-                        if(i > 50):
+                        if(i > 100):
                             break
                         try:
                             #print(line)
@@ -86,7 +86,7 @@ def create_app():
                         csvreader = csv.reader(csvfile)
                         next(csvreader)
                         for line in csvreader:
-                            if(i > 50):
+                            if(i > 100):
                                 break
                             try:
                                 cursor.execute("INSERT INTO Turma "

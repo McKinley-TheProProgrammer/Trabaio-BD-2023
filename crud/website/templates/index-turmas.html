@@ -3,7 +3,7 @@
 {% block conteudo %}
 <ul class="list-group list-group-flush" id ="index-disciplinas">
     {% for turma in classes %}
-        <li class="list-group-item-info">
+        <li class="list-group-item-info list-group-item btn-outline-info">
             <p class="mr-5">{{ turma[1:] }}</p>
         </li>
     {% endfor %}
