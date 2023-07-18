@@ -6,6 +6,8 @@ import os
 import psycopg2
 import csv
 
+from psycopg2.extras import RealDictCursor
+
 from .sqlRawExecute import executeScriptsFromFile, dropAllTables
 
 from dotenv import load_dotenv
@@ -44,7 +46,7 @@ def create_app():
     #name = data["name"]
 
     with connection:
-        with connection.cursor() as cursor:
+        with connection.cursor(cursor_factory=RealDictCursor) as cursor:
             if(deleteTablesOnStart):
                 dropAllTables(cursor)
                 executeScriptsFromFile("sql_querys/criacaotabelassql.sql",cursor)

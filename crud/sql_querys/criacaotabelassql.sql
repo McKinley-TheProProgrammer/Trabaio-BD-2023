@@ -44,9 +44,10 @@ CREATE TABLE IF NOT EXISTS Turma(
 
 
 CREATE TABLE IF NOT EXISTS Nota(
-    usuario_id SERIAL PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     nota_disciplina INT NOT NULL,
     descricao VARCHAR(10000) NOT NULL,
     dataDePostagem TIMESTAMP,
-    FOREIGN KEY (usuario_id) REFERENCES Usuario(id) ON DELETE CASCADE NOT NULL
+    usuario_id INT REFERENCES Usuario(id) ON DELETE CASCADE NOT NULL,
+    turma_id INT REFERENCES Turma(id) ON DELETE CASCADE NOT NULL
 );

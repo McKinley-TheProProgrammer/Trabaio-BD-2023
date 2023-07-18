@@ -2,8 +2,8 @@ from flask import Blueprint, render_template, request, flash, redirect, url_for
 
 from werkzeug.security import generate_password_hash, check_password_hash
 import os, psycopg2, csv
+from psycopg2.extras import RealDictCursor
 
-from flask_login import login_user, login_required, logout_user
 from .sqlRawExecute import *
 
 INSERT_USER_RETURNING_MAT = "INSERT INTO Usuario(matricula,nome,email,senha,curso) VALUES (%s,%s,%s,%s,%s) RETURNING matricula"
@@ -25,18 +25,21 @@ connect = get_db_connection()
 @auth.route("/login",methods=['GET','POST'])
 def login():
     global loggedIn
-    if(request.method == 'POST'):
+    
+    
+    user = None
+    #print([email,password])
+    if request.method == "POST":
         email = request.form.get('email')
         password = request.form.get('password')
-
-        print([email,password])
-        with connect.cursor() as cursor:
+    
+        with connect.cursor(cursor_factory=RealDictCursor) as cursor:
             cursor.execute(LOGIN_USER,(email,password))
             user = cursor.fetchone()
             print(user)
             if(user):
                 #print(user.password)
-                if(user[4] == password):
+                if(user['senha'] == password):
                     flash('Logado',category='success')
                     #login_user(user, remember=True)
                     loggedIn = True
@@ -46,25 +49,23 @@ def login():
             else:
                 flash('Email não existe', category='error')
 
-    return render_template("login.html")
+    return render_template("login.html",usuario=user)
 
 @auth.route('/logout',methods=['GET'])
 def logout():
     loggedIn = False
-    logout_user()
+    
     conn = get_db_connection()
-    cursor = conn.cursor()
 
-    id = request.form.get('id')
-    print(id)
-    cursor.execute(DELETE_USER_BY_ID,(id,))
+    with conn:
+        with conn.cursor(cursor_factory=RealDictCursor) as cursor:
+            cursor = conn.cursor()
 
-    conn.commit()
+            id = request.form.get('id')
+            print(id)
+            cursor.execute(DELETE_USER_BY_ID,(id,))
 
-    cursor.close()
-    conn.close()
-
-    flash("Usuario Deslogado com sucesso", category="success")
+            flash("Usuario Deslogado com sucesso", category="success")
 
     return redirect(url_for('views.home'))
 
@@ -90,7 +91,6 @@ def index_disciplinas():
     cursor.execute(SELECT_DISCIPLINAS)
 
     disciplinas = cursor.fetchall()
-
     cursor.close()
     conn.close()
 
@@ -100,47 +100,47 @@ def index_disciplinas():
 @auth.route('/sign-up', methods=['GET','POST'])
 def sign_up():
     global loggedIn
-    global user_id
+    user = None
     if request.method == 'POST':
-            mat = request.form.get('mat')
-            email = request.form.get('email')
-            nome = request.form.get('nome')
-            curso = request.form.get('curso')
-            password1 = request.form.get('password1')
-            password2 = request.form.get('password2')
+        mat = request.form.get('mat')
+        email = request.form.get('email')
+        nome = request.form.get('nome')
+        curso = request.form.get('curso')
+        password1 = request.form.get('password1')
+        password2 = request.form.get('password2')
 
-            conn = get_db_connection()
-            cursor = conn.cursor()
-            
-            cursor.execute(SELECT_USERS)
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        cursor.execute(SELECT_USERS)
+        user = cursor.fetchone()
+        conn.commit()
+        #current_user = user
+        if user != None:
+            flash('Usuário já existe.', category='error')
+        elif len(email) < 4:
+            flash('Email precisa ter no minimo 4 caracteres.', category='error')
+        elif len(nome) < 2:
+            flash('Nome precisa ter no minimo 2 caracteres', category='error')
+        elif len(curso) < 8:
+            flash('Curso precisa ter no minimo 8 caracteres', category='error')
+        elif password1 != password2:
+            flash('As senhas não são iguais', category='error')
+        elif len(password1) < 7:
+            flash('A senha precisa ter no minimo 8 caracteres', category='error')
+        else:
+            cursor.execute(INSERT_USER_RETURNING_MAT,(mat,nome,email,password1,curso))
+            cursor.execute(LOGIN_USER,(email,password1))
             user = cursor.fetchone()
             conn.commit()
-            #current_user = user
-            if user != None:
-                flash('Usuário já existe.', category='error')
-            elif len(email) < 4:
-                flash('Email precisa ter no minimo 4 caracteres.', category='error')
-            elif len(nome) < 2:
-                flash('Nome precisa ter no minimo 2 caracteres', category='error')
-            elif len(curso) < 8:
-                flash('Curso precisa ter no minimo 8 caracteres', category='error')
-            elif password1 != password2:
-                flash('As senhas não são iguais', category='error')
-            elif len(password1) < 7:
-                flash('A senha precisa ter no minimo 8 caracteres', category='error')
-            else:
-                cursor.execute(INSERT_USER_RETURNING_MAT,(mat,nome,email,password1,curso))
-                cursor.execute(LOGIN_USER,(email,password1))
-                user = cursor.fetchone()
-                conn.commit()
-                
-                cursor.close()
-                conn.close()
-                #db.session.add(new_user)
-                #db.session.commit()
-                
-                #login_user(new_user, remember=True)
-                flash('Conta Registrada!', category='success')
-                return redirect(url_for('views.home'))
             
-    return render_template("sign_up.html",us = user)
+            cursor.close()
+            conn.close()
+            #db.session.add(new_user)
+            #db.session.commit()
+            
+            #login_user(new_user, remember=True)
+            flash('Conta Registrada!', category='success')
+            return redirect(url_for('views.home'))
+            
+    return render_template("sign_up.html",usuario=user)

@@ -1,15 +1,15 @@
 {% extends "base.html" %} {% block title %} Home {% endblock %}
 
 {% block conteudo %}
-<h1> Esta e a pagina inicial do Site</h1>
+<h1>Home AvaliaUnB</h1>
 <h2 align = "center"> Forum de Avaliações </h2>
 <ul class="list-group list-group-flush" id = "note">
     {% for n in note %}
     <li class="list-group-item">
-        {{ n[2] }}
-        <!--<button type="button" class="close" onClick="deleteNote({{note.id}})">
+        {{ n[1:] }}
+        <button type="button" class="close" onClick="deleteNote({{n[0]}})">
          <span aria-hidden="true">&times;</span>
-        </button>-->
+        </button>
     </li>
     {% endfor %}
 </ul>
@@ -18,8 +18,16 @@
         <div class="input-group-prepend">
           <label class="input-group-text" for="aval">Nota</label>
         </div>
+        <select class="custom-select" id="index-disciplinas" name="index-disciplinas">
+            <option selected>Selecione a Disciplina</option>
+            {% for disc in disciplines %}
+            <option value="{{disc[0]}}">
+                {{disc[2]}}
+            </option>
+            {% endfor %}
+        </select>
         <select class="custom-select" id="aval" name="aval">
-          <option selected>Avalie a Disciplina</option>
+          <!--<option selected>Avalie a Disciplina</option>-->
           <option value="1">1</option>
           <option value="2">2</option>
           <option value="3">3</option>

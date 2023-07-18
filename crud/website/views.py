@@ -13,28 +13,29 @@ views = Blueprint('views',__name__)
 @views.route('/', methods=['GET','POST'])
 def home():
     notes = []
+    disciplinas = []
     if request.method == 'POST':
+        id = request.form.get('id')
         descricao = request.form.get('note')
         nota = request.form.get('aval')
-        
+        user = get_usuario(id)
+        turma_id = get_turma(id)
         if(len(descricao) < 1):
             flash('Avaliação muito pequena!!', category='error')
         elif(len(nota) < 1):
             flash('De uma Nota',category='error')
         else:
             connect = get_db_connection()
-            #cursor.execute("SELECT * FROM Usuario")
-            #note_list = cursor.fetchall()
-            #print(len(note_list))
-            #new_note = Note(note_list[0],new_note[1],new_note[2],note,nota,datetime.now()) #Schema
-
             cursor = connect.cursor()
-            cursor.execute(SELECT_USER_FROM_ID)
-            #user = cursor.fetchone()[0]
-            #print(user)
-            cursor.execute("INSERT INTO Nota(nota_disciplina,descricao,dataDePostagem) VALUES (%s,%s,%s)", (int(nota),descricao,datetime.now()))
+
+           
+            cursor.execute("INSERT INTO Nota(nota_disciplina,descricao,dataDePostagem,usuario_id,turma_id) VALUES (%s,%s,%s,%s,%s)", (nota,descricao,datetime.now(),id,id))
             cursor.execute(SELECT_NOTES)
             notes = cursor.fetchall()
+
+            cursor.execute(SELECT_DISCIPLINAS)
+            disciplinas = cursor.fetchall()
+
             connect.commit()
             print(notes)
 
@@ -43,7 +44,7 @@ def home():
     
             flash('Avaliação Enviada', category='success')
 
-    return render_template("home.html",note=notes)
+    return render_template("home.html",note=notes,disciplines=disciplinas)
 
 @views.route('/delete-note',methods=['POST'])
 def delete_note():
@@ -55,14 +56,15 @@ def delete_note():
           
             return jsonify({})
         
-@views.route('/profile',methods=['POST'])
+@views.route('/profile',methods=['GET','POST'])
 def profile():
 
     conn = get_db_connection()
+
     cursor = conn.cursor()
     id = request.form['id']
     cursor.execute(SELECT_USERS)
     user = cursor.fetchone()
     conn.commit()
 
-    return render_template("profile.html")
+    return render_template("profile.html",us=user)
