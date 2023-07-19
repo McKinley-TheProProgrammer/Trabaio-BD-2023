@@ -98,10 +98,12 @@ def index_disciplinas():
     return render_template('index-disciplinas.html',disciplines=disciplinas)
 
 
+
 @auth.route('/sign-up', methods=['GET','POST'])
 def sign_up():
     global loggedIn
     user = None
+    disciplinas = get_courses()
     if request.method == 'POST':
         mat = request.form.get('mat')
         email = request.form.get('email')
@@ -115,6 +117,10 @@ def sign_up():
         
         cursor.execute(SELECT_USERS)
         user = cursor.fetchone()
+
+        cursor.execute(SELECT_DISCIPLINAS)
+        
+
         conn.commit()
         #current_user = user
         #if user != None:
@@ -144,4 +150,4 @@ def sign_up():
             flash('Conta Registrada!', category='success')
             return redirect(url_for('views.home'))
             
-    return render_template("sign_up.html",usuario=user)
+    return render_template("sign_up.html",usuario=user,disciplines=disciplinas)

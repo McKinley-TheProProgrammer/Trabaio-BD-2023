@@ -13,13 +13,16 @@ views = Blueprint('views',__name__)
 @views.route('/', methods=['GET','POST'])
 def home():
     notes = []
-    disciplinas = []
+    disciplinas = get_courses()
+    id = request.form.get('id')
+    user = get_usuario(id)
+    turma_id = get_turma(id)
+
     if request.method == 'POST':
-        id = request.form.get('id')
+        
         descricao = request.form.get('note')
         nota = request.form.get('aval')
-        user = get_usuario(id)
-        turma_id = get_turma(id)
+       
         if(len(descricao) < 1):
             flash('Avaliação muito pequena!!', category='error')
         elif(len(nota) < 1):
@@ -28,16 +31,16 @@ def home():
             connect = get_db_connection()
             cursor = connect.cursor()
 
+            
            
             cursor.execute("INSERT INTO Nota(nota_disciplina,descricao,dataDePostagem,usuario_id,turma_id) VALUES (%s,%s,%s,%s,%s)", (nota,descricao,datetime.now(),user,turma_id))
             cursor.execute(SELECT_NOTES)
             notes = cursor.fetchall()
 
-            cursor.execute(SELECT_DISCIPLINAS)
-            disciplinas = cursor.fetchall()
+            print("Notas: ",notes)
 
             connect.commit()
-            print(notes)
+            
 
             cursor.close()
             connect.close()

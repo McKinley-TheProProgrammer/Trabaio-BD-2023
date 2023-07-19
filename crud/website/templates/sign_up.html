@@ -20,7 +20,7 @@
     <div class="form-group">
         <label for="curso">Curso</label>
 
-            <select class="custom-select" id = "index-disciplinas" name = "index-disciplinas">
+            <select class="custom-select" id = "index-disciplinas" name = "index-disciplinas" onchange="copyTextValue()">
                 <option selected>Selecione o Curso</option>
                 {% for disc in disciplines %}
                     <option value="{{ disc[0] }}"
@@ -29,8 +29,8 @@
                     </option>
                 {% endfor %}
             </select>
-           
-        <input type="curso" class = "form-control" id="curso" name="curso" placeholder="Nome do Curso">
+            <td><input type="curso" class = "form-control" id="curso" name="curso" placeholder="Nome do Curso"></td>
+        
     </div>
     <div class="form-group">
         <!-- Campo para colocar a senha -->
